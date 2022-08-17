@@ -1,0 +1,15 @@
+.post {
+    &:nth-child(even) {
+        background-color: #cccccc;
+    }
+
+    @media (max-width: 375px) {
+        .post__images {
+            display: block !important;
+            img {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+        }
+    }
+}
