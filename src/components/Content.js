@@ -1,20 +1,49 @@
 import React, {useCallback, useEffect, useState} from "react";
+import {Button, Col, Container, Modal, Row} from "react-bootstrap";
 import TopContent from "./TopContent";
 import Header from "./Header";
 import Posts from "./Posts";
-import {Button, Col, Container, Modal, Row} from "react-bootstrap";
+import Login from "./Login";
+import AuthContext from "../store/auth-context";
 
 function Content() {
     const [posts, setPosts] = useState([]);
     const [show, setShow] = useState(false);
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
     const [title, setTitle] = useState('');
     const [text, setText] = useState('');
     const [id, setId] = useState('');
     const [showAlert, setShowAlert] = useState(false);
     const [message, setMessage] = useState('');
+    const handleClose = () => {
+        setShow(false)
+        setText('')
+        setTitle('')
+    };
+    const handleShow = () => setShow(true);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+    // login/logout actions
+    useEffect(() => {
+        const storedUserLoggedInInformation = localStorage.getItem('isLoggedIn');
+
+        if (storedUserLoggedInInformation === '1') {
+            setIsLoggedIn(true);
+        }
+    }, []);
+
+    const loginHandler = (email, password) => {
+        // We should of course check email and password
+        // But it's just a dummy/ demo anyways
+        localStorage.setItem('isLoggedIn', '1');
+        setIsLoggedIn(true);
+    };
+
+    const logoutHandler = () => {
+        localStorage.removeItem('isLoggedIn');
+        setIsLoggedIn(false);
+    };
+
+    // blog posts actions
     const loadPosts = useCallback(
         () => {
             console.log('load posts use Callback!')
@@ -66,6 +95,8 @@ function Content() {
                 });
                 setPosts(oldPosts);
                 setMessage('Post edited!')
+                setText('')
+                setTitle('')
                 setShowAlert(true)
                 setShow(false)
             })
@@ -112,8 +143,16 @@ function Content() {
     }
 
     return (
+        <AuthContext.Provider
+            value={{
+                isLoggedIn: isLoggedIn,
+                onLogout: logoutHandler
+            }}
+        >
         <section className="content">
             <Header handleShow={handleShow}/>
+            {!isLoggedIn && <Login onLogin={loginHandler} />}
+            {isLoggedIn &&
             <Modal show={show} onHide={handleClose} size="lg"
                    aria-labelledby="contained-modal-title-vcenter"
                    centered>
@@ -150,8 +189,9 @@ function Content() {
                         Cancel
                     </Button>
                 </Modal.Footer>
-            </Modal>
-            <Container className="h-100">
+            </Modal>}
+            {isLoggedIn &&
+                <Container className="h-100">
                 <Row>
                     <Col lg={12}>
                         <TopContent
@@ -169,8 +209,9 @@ function Content() {
                         />
                     </Col>
                 </Row>
-            </Container>
+            </Container>}
         </section>
+        </AuthContext.Provider>
     );
 }
 

@@ -1,7 +1,9 @@
-import React from "react";
+import React, {useContext} from "react";
 import {Container, Nav, Navbar} from "react-bootstrap";
+import AuthContext from "../store/auth-context";
 
 function Header(props) {
+    const ctx = useContext(AuthContext);
     return (
         <header>
             <Container>
@@ -12,8 +14,8 @@ function Header(props) {
                         <Nav
                             className="my-2 my-lg-0 ms-auto"
                         >
-                            <button className="btn btn-light me-2" onClick={props.handleShow}>Add new post</button>
-                            <Nav.Link href="#action2">Logout</Nav.Link>
+                            {ctx.isLoggedIn && <button className="btn btn-light me-2" onClick={props.handleShow}>Add new post</button>}
+                            {ctx.isLoggedIn && <Nav.Link href="#action2" onClick={ctx.onLogout}>Logout</Nav.Link>}
                         </Nav>
                     </Navbar.Collapse>
                 </Navbar>
