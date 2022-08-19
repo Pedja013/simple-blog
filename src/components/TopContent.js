@@ -1,11 +1,12 @@
-import React from "react";
+import React, {useContext} from "react";
 import SystemAlert from "./SystemAlert";
-import {Button} from "react-bootstrap";
+import AuthContext from "../store/auth-context";
 
 function TopContent(props) {
+    const ctx = useContext(AuthContext);
     return (
         <React.Fragment>
-            <h1 className="mb-4">Welcome to my blog</h1>
+            <h1 className="mb-4">Welcome {ctx.currentUserEmail}!</h1>
             <SystemAlert showAlert={props.showAlert} setShowAlert={props.setShowAlert} message={props.message}/>
         </React.Fragment>
     );
