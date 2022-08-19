@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from "react";
+import React, {useCallback, useContext, useEffect, useState} from "react";
 import {Button, Col, Container, Modal, Row} from "react-bootstrap";
 import TopContent from "./TopContent";
 import Header from "./Header";
@@ -18,29 +18,36 @@ function Content() {
         setShow(false)
         setText('')
         setTitle('')
+        setId('')
     };
     const handleShow = () => setShow(true);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [currentUser, setCurrentUser] = useState('');
+    const ctx = useContext(AuthContext);
 
     // login/logout actions
     useEffect(() => {
         const storedUserLoggedInInformation = localStorage.getItem('isLoggedIn');
+        const storedUserEmail = localStorage.getItem('loggedUserEmail');
 
         if (storedUserLoggedInInformation === '1') {
             setIsLoggedIn(true);
+            setCurrentUser(storedUserEmail);
         }
     }, []);
 
     const loginHandler = (email, password) => {
-        // We should of course check email and password
-        // But it's just a dummy/ demo anyways
         localStorage.setItem('isLoggedIn', '1');
+        localStorage.setItem('loggedUserEmail', email);
         setIsLoggedIn(true);
+        setCurrentUser(email);
     };
 
     const logoutHandler = () => {
         localStorage.removeItem('isLoggedIn');
+        localStorage.removeItem('loggedUserEmail');
         setIsLoggedIn(false);
+        setCurrentUser('');
     };
 
     // blog posts actions
@@ -58,7 +65,8 @@ function Content() {
                         loadedPosts.push({
                             id: key,
                             title: posts[key].title,
-                            text: posts[key].text
+                            text: posts[key].text,
+                            userEmail: posts[key].userEmail
                         });
                     }
 
@@ -102,7 +110,7 @@ function Content() {
             })
         } else {
             console.log("creation form")
-            let post = { title, text };
+            let post = { title, text, userEmail: currentUser };
             fetch('https://simple-blog-d0844-default-rtdb.firebaseio.com/blogposts.json', {
                 method: 'POST',
                 headers: { "Content-Type": "application/json" },
@@ -146,7 +154,8 @@ function Content() {
         <AuthContext.Provider
             value={{
                 isLoggedIn: isLoggedIn,
-                onLogout: logoutHandler
+                onLogout: logoutHandler,
+                currentUserEmail: currentUser
             }}
         >
         <section className="content">

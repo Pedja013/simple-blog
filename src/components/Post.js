@@ -1,7 +1,11 @@
-import React from "react";
+import React, {useContext} from "react";
 import {Button, Card} from "react-bootstrap";
+import AuthContext from "../store/auth-context";
 
 const Post = (props) => {
+    const ctx = useContext(AuthContext)
+    const canEdit = props.post.userEmail === ctx.currentUserEmail;
+
     return (
         <Card className="post py-3 px-4 mb-4" key={props.post.id}>
             <div className="post__header d-block d-lg-flex align-items-center justify-content-between">
@@ -10,12 +14,15 @@ const Post = (props) => {
                         <h5 className="mb-0">
                             <strong>{props.post.title}</strong>
                         </h5>
+                        <h6 className="mt-3">
+                            By: {props.post.userEmail}
+                        </h6>
                     </div>
                 </div>
-                <div className="post__header-controls">
+                {canEdit && <div className="post__header-controls">
                     <Button className="btn btn-dark me-3" onClick={() => props.handleEditShow(props.post.id)}>Edit</Button>
                     <Button className="btn btn-dark" onClick={() => props.handleDelete(props.post.id)}>Delete</Button>
-                </div>
+                </div>}
             </div>
             <div className="post__content my-3">
                 {props.post.text}
