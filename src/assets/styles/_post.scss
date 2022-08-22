@@ -1,15 +1,42 @@
 .post {
-    &:nth-child(even) {
-        background-color: #cccccc;
-    }
+    box-shadow: rgba(136, 165, 191, 0.48) 6px 2px 16px 0, rgba(255, 255, 255, 0.8) -6px -2px 16px 0px;
+    border: 0;
+    .post__header-controls {
+        button {
+            background: none;
+            border: 0;
 
-    @media (max-width: 375px) {
-        .post__images {
-            display: block !important;
             img {
-                width: 100%;
-                margin-bottom: 10px;
+                width: 30px;
+                height: 30px;
             }
         }
+    }
+
+    .post__content {
+        height: 100px;
+        max-height: 100px;
+        overflow-y: auto;
+    }
+
+    /* width */
+    ::-webkit-scrollbar {
+        width: 10px;
+    }
+
+    /* Track */
+    ::-webkit-scrollbar-track {
+        border-radius: 10px;
+    }
+
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+        background: rgba(0, 0, 0, .9);
+        border-radius: 10px;
+    }
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+        background: #000000;
     }
 }

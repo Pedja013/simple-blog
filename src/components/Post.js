@@ -1,6 +1,8 @@
 import React, {useContext} from "react";
 import {Button, Card} from "react-bootstrap";
 import AuthContext from "../store/auth-context";
+import deleteIcon from "../assets/img/delete.svg"
+import editIcon from "../assets/img/edit.svg";
 
 const Post = (props) => {
     const ctx = useContext(AuthContext)
@@ -20,8 +22,12 @@ const Post = (props) => {
                     </div>
                 </div>
                 {canEdit && <div className="post__header-controls">
-                    <Button className="btn btn-dark me-3" onClick={() => props.handleEditShow(props.post.id)}>Edit</Button>
-                    <Button className="btn btn-dark" onClick={() => props.handleDelete(props.post.id)}>Delete</Button>
+                    <Button className="me-3 p-0" onClick={() => props.handleEditShow(props.post.id)}>
+                        <img src={editIcon} className="me-3 mb-4 mb-sm-0" alt="placeholder"/>
+                    </Button>
+                    <Button className="p-0" onClick={() => props.handleDelete(props.post.id)}>
+                        <img src={deleteIcon} className="me-3 mb-4 mb-sm-0" alt="placeholder"/>
+                    </Button>
                 </div>}
             </div>
             <div className="post__content my-3">
