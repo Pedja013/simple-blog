@@ -3,9 +3,11 @@
     max-width: 40rem;
     margin: 2rem auto;
     padding: 2rem;
+    box-shadow: rgba(136, 165, 191, 0.48) 6px 2px 16px 0, rgba(255, 255, 255, 0.8) -6px -2px 16px 0px;
+    border: 0;
 
     .control {
-        margin: 1rem 0;
+        margin: 1rem 0 0 0;
         display: flex;
         align-items: stretch;
         flex-direction: column;
@@ -19,7 +21,7 @@
     .control label {
         font-weight: bold;
         flex: 1;
-        color: #464646;
+        color: #000000;
         margin-bottom: 0.5rem;
     }
 
@@ -44,6 +46,10 @@
 
     .actions {
         text-align: center;
+    }
+
+    .error-msg {
+        color: red;
     }
 
     @media (min-width: 768px) {

@@ -5,9 +5,9 @@ const emailReducer = (state, action) => {
         return { value: action.val, isValid: action.val.includes('@') };
     }
     if (action.type === 'INPUT_BLUR') {
-        return { value: state.value, isValid: state.value.includes('@') };
+        return { value: state.value, isValid: state.value.includes('@'), showError: !state.value.includes('@') };
     }
-    return { value: '', isValid: false };
+    return { value: '', isValid: false, showError: false };
 };
 
 const passwordReducer = (state, action) => {
@@ -15,9 +15,9 @@ const passwordReducer = (state, action) => {
         return { value: action.val, isValid: action.val.trim().length > 6 };
     }
     if (action.type === 'INPUT_BLUR') {
-        return { value: state.value, isValid: state.value.trim().length > 6 };
+        return { value: state.value, isValid: state.value.trim().length > 6, showError: !state.value.trim().length > 6 };
     }
-    return { value: '', isValid: false };
+    return { value: '', isValid: false, showError: false };
 };
 
 const Login = (props) => {
@@ -32,25 +32,15 @@ const Login = (props) => {
         isValid: null,
     });
 
-    useEffect(() => {
-        console.log('EFFECT RUNNING');
-
-        return () => {
-            console.log('EFFECT CLEANUP');
-        };
-    }, []);
-
     const { isValid: emailIsValid } = emailState;
     const { isValid: passwordIsValid } = passwordState;
 
     useEffect(() => {
         const identifier = setTimeout(() => {
-            console.log('Checking form validity!');
             setFormIsValid(emailIsValid && passwordIsValid);
         }, 500);
 
         return () => {
-            console.log('CLEANUP');
             clearTimeout(identifier);
         };
     }, [emailIsValid, passwordIsValid]);
@@ -77,7 +67,8 @@ const Login = (props) => {
     };
 
     return (
-        <div className="login">
+        <div className="login mb-4">
+            <h1 className="text-center">Login</h1>
             <form onSubmit={submitHandler}>
                 <div
                     className={`${'control'} ${
@@ -93,6 +84,7 @@ const Login = (props) => {
                         onBlur={validateEmailHandler}
                     />
                 </div>
+                {emailState.showError && <div className="text-end error-msg">Please enter valid email</div>}
                 <div
                     className={`${'control'} ${
                         passwordState.isValid === false ? 'invalid' : ''
@@ -107,7 +99,8 @@ const Login = (props) => {
                         onBlur={validatePasswordHandler}
                     />
                 </div>
-                <div className="actions">
+                {passwordState.showError && <div className="text-end error-msg">Please enter password with at least 6 characters</div>}
+                <div className="actions mt-4">
                     <button type="submit" className="btn btn-dark" disabled={!formIsValid}>
                         Login
                     </button>

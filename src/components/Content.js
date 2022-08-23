@@ -10,14 +10,18 @@ function Content() {
     const [posts, setPosts] = useState([]);
     const [show, setShow] = useState(false);
     const [title, setTitle] = useState('');
+    const [titleTouched, setTitleTouched] = useState(false);
     const [text, setText] = useState('');
+    const [textTouched, setTextTouched] = useState(false);
     const [id, setId] = useState('');
     const [showAlert, setShowAlert] = useState(false);
     const [message, setMessage] = useState('');
     const handleClose = () => {
         setShow(false)
         setText('')
+        setTitleTouched(false)
         setTitle('')
+        setTitleTouched(false)
         setId('')
     };
     const handleShow = () => setShow(true);
@@ -82,11 +86,44 @@ function Content() {
         loadPosts()
     }, [loadPosts]);
 
+    const textChangeHandler = (event) => {
+        setText(event.target.value)
+    };
+
+    const textBlurHandler = () => {
+        setTextTouched(true)
+    };
+    const titleBlurHandler = () => {
+        setTitleTouched(true)
+    };
+
+    const titleChangeHandler = (event) => {
+        setTitle(event.target.value)
+    };
+
+    const titleIsValid = title.trim() !== '';
+    const titleIsInvalid = !titleIsValid && titleTouched
+    const textIsValid = text.trim() !== '';
+    const textIsInvalid = !textIsValid && textTouched;
+
+    const titleInputClasses = titleIsInvalid
+        ? 'form-control border-0 d-flex align-items-start invalid'
+        : 'form-control border-0 d-flex align-items-start';
+
+    const textInputClasses = textIsInvalid
+        ? 'form-control border-0 d-flex align-items-start invalid'
+        : 'form-control border-0 d-flex align-items-start';
+
     const handleSubmit = (e) => {
         e.preventDefault();
+
+        if (titleIsInvalid || textIsInvalid) {
+            return;
+        }
+
         if (id) {
             console.log("edit form")
-            let post = { id, title, text}
+            let post = { id, title, text, userEmail: currentUser}
             fetch('https://simple-blog-d0844-default-rtdb.firebaseio.com/blogposts/' + id + '.json', {
                 method: 'PUT',
                 headers: { "Content-Type": "application/json" },
@@ -104,7 +141,9 @@ function Content() {
                 setPosts(oldPosts);
                 setMessage('Post edited!')
                 setText('')
+                setTextTouched(false)
                 setTitle('')
+                setTextTouched(false)
                 setShowAlert(true)
                 setShow(false)
             })
@@ -121,7 +160,9 @@ function Content() {
                     loadPosts()
                     setMessage('New post added!')
                     setTitle('')
+                    setTitleTouched(false)
                     setText('')
+                    setTextTouched(false)
                     setShow(false);
                     setShowAlert(true);
                 })
@@ -171,23 +212,27 @@ function Content() {
                 <Modal.Body>
                     <form onSubmit={handleSubmit}>
                         <input type="hidden" name="form-name" value={id} />
-                        <div className="form-control border-0 d-flex align-items-start">
+                        <div className={titleInputClasses}>
                             <label className="me-3">Title:</label>
                             <input
                                 type="text"
                                 required
                                 value={title}
-                                onChange={(e) => setTitle(e.target.value)}
+                                onChange={titleChangeHandler}
+                                onBlur={titleBlurHandler}
                             />
                         </div>
-                        <div className="form-control border-0 d-flex align-items-start">
+                        {titleIsInvalid && <p className="error-msg">Please enter post title.</p>}
+                        <div className={textInputClasses}>
                             <label className="me-3">Text:</label>
                             <textarea
                                 required
                                 value={text}
-                                onChange={(e) => setText(e.target.value)}
+                                onChange={textChangeHandler}
+                                onBlur={textBlurHandler}
                             ></textarea>
                         </div>
+                        {textIsInvalid && <p className="error-msg">Please enter post text.</p>}
                     </form>
                 </Modal.Body>
                 <Modal.Footer className="d-flex justify-content-center">
