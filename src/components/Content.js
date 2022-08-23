@@ -21,7 +21,7 @@ function Content() {
         setText('')
         setTitleTouched(false)
         setTitle('')
-        setTitleTouched(false)
+        setTextTouched(false)
         setId('')
     };
     const handleShow = () => setShow(true);
@@ -222,7 +222,7 @@ function Content() {
                                 onBlur={titleBlurHandler}
                             />
                         </div>
-                        {titleIsInvalid && <p className="error-msg">Please enter post title.</p>}
+                        {titleIsInvalid && <p className="ms-3 d-flex justify-content-end error-msg">Please enter post title.</p>}
                         <div className={textInputClasses}>
                             <label className="me-3">Text:</label>
                             <textarea
@@ -232,7 +232,7 @@ function Content() {
                                 onBlur={textBlurHandler}
                             ></textarea>
                         </div>
-                        {textIsInvalid && <p className="error-msg">Please enter post text.</p>}
+                        {textIsInvalid && <p className="ms-3 d-flex justify-content-end error-msg">Please enter post text.</p>}
                     </form>
                 </Modal.Body>
                 <Modal.Footer className="d-flex justify-content-center">

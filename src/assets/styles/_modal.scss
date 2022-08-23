@@ -5,6 +5,19 @@
             input {
                 min-width: 80%;
             }
+
+            .form-control {
+                &.invalid input,
+                &.invalid textarea {
+                    border-color: red;
+                    background: #fbdada;
+                }
+            }
+
+            .error-msg {
+                color: red;
+                max-width: 85%;
+            }
         }
     }
 }
