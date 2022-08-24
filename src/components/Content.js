@@ -125,6 +125,8 @@ function Content() {
             return;
         }
 
+        setIsLoading(true);
+
         if (id) {
             console.log("edit form")
             let post = { id, title, text, userEmail: currentUser}
@@ -150,6 +152,7 @@ function Content() {
                 setTextTouched(false)
                 setShowAlert(true)
                 setShow(false)
+                setIsLoading(false)
             })
         } else {
             console.log("creation form")
@@ -169,6 +172,7 @@ function Content() {
                     setTextTouched(false)
                     setShow(false);
                     setShowAlert(true);
+                    setIsLoading(false)
                 })
         }
     }
