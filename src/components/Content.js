@@ -27,6 +27,7 @@ function Content() {
     const handleShow = () => setShow(true);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [currentUser, setCurrentUser] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
     const ctx = useContext(AuthContext);
 
     // login/logout actions
@@ -52,12 +53,14 @@ function Content() {
         localStorage.removeItem('loggedUserEmail');
         setIsLoggedIn(false);
         setCurrentUser('');
+        setShowAlert(false);
     };
 
     // blog posts actions
     const loadPosts = useCallback(
         () => {
             console.log('load posts use Callback!')
+            setIsLoading(true)
             const apiUrl = `https://simple-blog-d0844-default-rtdb.firebaseio.com/blogposts.json`;
             fetch(apiUrl)
                 .then((res) => res.json())
@@ -75,6 +78,7 @@ function Content() {
                     }
 
                     setPosts(loadedPosts)
+                    setIsLoading(false)
                 });
             return posts
         },
@@ -256,6 +260,7 @@ function Content() {
                         />
                     </Col>
                     <Col lg={12} className="mt-4 mt-lg-0">
+                        {isLoading && <div className="loader"></div>}
                         <Posts posts={posts}
                                handleDelete={handleDelete}
                                handleShow={handleShow}
